@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MWS Marketing Digital - Documentación Completa</title>
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #8b5cf6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #94a3b8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            padding: 1rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .phases-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .phase-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .phase-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .phase-header {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .phase-header i {
+            font-size: 1.8rem;
+        }
+        
+        .phase-content {
+            padding: 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .phase-card.active .phase-content {
+            max-height: 2000px;
+        }
+        
+        .phase-card.active .phase-header {
+            background: var(--primary-dark);
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+        
+        .section-title h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section-content {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+        
+        .section-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary);
+            left: 50%;
+            margin-left: -2px;
+        }
+        
+        .timeline-item {
+            position: relative;
+            width: 50%;
+            padding: 1.5rem;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 3rem;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 3rem;
+        }
+        
+        .timeline-content {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            position: relative;
+        }
+        
+        .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            right: -30px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::after {
+            left: -30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            margin-top: 2rem;
+            color: var(--gray);
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .search-container {
+            margin: 1.5rem 0;
+            position: relative;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 0.75rem 1.5rem 0.75rem 3rem;
+            border-radius: 50px;
+            border: 1px solid #cbd5e1;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .search-container i {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--success);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .tag {
+            display: inline-block;
+            background: #e0f2fe;
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin: 0.25rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card h4 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content::after,
+            .timeline-item:nth-child(even) .timeline-content::after {
+                left: 20px;
+                right: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // Componentes principales
+        const App = () => {
+            const [activePhase, setActivePhase] = React.useState(null);
+            const [activeSection, setActiveSection] = React.useState('plan');
+            
+            const togglePhase = (phase) => {
+                setActivePhase(activePhase === phase ? null : phase);
+            };
+            
+            const setSection = (section) => {
+                setActiveSection(section);
+            };
+            
+            return (
+                <div className="app-container">
+                    <Header />
+                    
+                    <div className="stats-container">
+                        <StatCard icon="fa-file-lines" value="100+" label="Páginas de documentación" />
+                        <StatCard icon="fa-diagram-project" value="6" label="Módulos principales" />
+                        <StatCard icon="fa-clock" value="2023-2026" label="Plan estratégico" />
+                        <StatCard icon="fa-dollar-sign" value="$50K" label="Proyección anual" />
+                    </div>
+                    
+                    <div className="search-container">
+                        <i className="fas fa-search"></i>
+                        <input type="text" placeholder="Buscar en la documentación..." />
+                    </div>
+                    
+                    <div className="phases-container">
+                        <PhaseCard 
+                            title="1. Plan de Trabajo General" 
+                            icon="fa-map"
+                            isActive={activePhase === 'plan'}
+                            onClick={() => togglePhase('plan')}
+                        >
+                            <PhaseContent />
+                        </PhaseCard>
+                        
+                        <PhaseCard 
+                            title="2. Estudio de Factibilidad" 
+                            icon="fa-chart-line"
+                            isActive={activePhase === 'factibilidad'}
+                            onClick={() => togglePhase('factibilidad')}
+                        >
+                            <FeasibilityStudy />
+                        </PhaseCard>
+                        
+                        <PhaseCard 
+                            title="3. Manuales Operativos" 
+                            icon="fa-book"
+                            isActive={activePhase === 'manuales'}
+                            onClick={() => togglePhase('manuales')}
+                        >
+                            <OperationalManuals />
+                        </PhaseCard>
+                    </div>
+                    
+                    <div className="phases-container">
+                        <PhaseCard 
+                            title="4. Plantillas y Formatos" 
+                            icon="fa-file-pen"
+                            isActive={activePhase === 'plantillas'}
+                            onClick={() => togglePhase('plantillas')}
+                        >
+                            <TemplatesSection />
+                        </PhaseCard>
+                        
+                        <PhaseCard 
+                            title="5. Estrategia de Marketing" 
+                            icon="fa-bullhorn"
+                            isActive={activePhase === 'marketing'}
+                            onClick={() => togglePhase('marketing')}
+                        >
+                            <MarketingStrategy />
+                        </PhaseCard>
+                        
+                        <PhaseCard 
+                            title="6. Anexos y Recursos" 
+                            icon="fa-folder-tree"
+                            isActive={activePhase === 'anexos'}
+                            onClick={() => togglePhase('anexos')}
+                        >
+                            <AnnexesSection />
+                        </PhaseCard>
+                    </div>
+                    
+                    <Footer />
+                </div>
+            );
+        };
+        
+        // Componentes de apoyo
+        const Header = () => (
+            <header>
+                <h1><i className="fas fa-file-circle-check"></i> Documentación Completa - MWS Marketing Digital</h1>
+                <p>Plan estratégico, manuales operativos, plantillas y recursos para escalar tu negocio digital en Latinoamérica</p>
+            </header>
+        );
+        
+        const StatCard = ({ icon, value, label }) => (
+            <div className="stat-card">
+                <i className={`fas ${icon}`}></i>
+                <h3>{value}</h3>
+                <p>{label}</p>
+            </div>
+        );
+        
+        const PhaseCard = ({ title, icon, children, isActive, onClick }) => (
+            <div className={`phase-card ${isActive ? 'active' : ''}`} onClick={onClick}>
+                <div className="phase-header">
+                    <i className={`fas ${icon}`}></i>
+                    <h2>{title}</h2>
+                </div>
+                <div className="phase-content">
+                    {children}
+                </div>
+            </div>
+        );
+        
+        const Section = ({ title, icon, children, isActive, onClick }) => (
+            <div>
+                <div className="section-title" onClick={onClick}>
+                    <h3><i className={`fas ${icon}`}></i> {title}</h3>
+                    <i className={`fas ${isActive ? 'fa-chevron-up' : 'fa-chevron-down'}`}></i>
+                </div>
+                <div className={`section-content ${isActive ? 'active' : ''}`}>
+                    {children}
+                </div>
+            </div>
+        );
+        
+        const Footer = () => (
+            <footer>
+                <p>© 2023 MWS Marketing Digital. Todos los derechos reservados.</p>
+                <p>Documentación actualizada: Julio 2023 | Versión 2.0</p>
+            </footer>
+        );
+        
+        // Contenido de las fases
+        const PhaseContent = () => (
+            <div>
+                <h3>1.1 Objetivos</h3>
+                <div className="timeline">
+                    <div className="timeline-item">
+                        <div className="timeline-content">
+                            <h4>Corto plazo (0–6 meses)</h4>
+                            <ul>
+                                <li>Consolidar presencia digital</li>
+                                <li>Captar primeros 20 clientes</li>
+                                <li>Crear branding sólido y uniforme</li>
+                                <li>Integrar sistema de factura electrónica</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="timeline-item">
+                        <div className="timeline-content">
+                            <h4>Mediano plazo (6–18 meses)</h4>
+                            <ul>
+                                <li>Escalar equipo a 5 empleados</li>
+                                <li>Expandir servicios a empresas medianas</li>
+                                <li>Crear embudos de venta automatizados</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="timeline-item">
+                        <div className="timeline-content">
+                            <h4>Largo plazo (18–36 meses)</h4>
+                            <ul>
+                                <li>Internacionalizar servicios en LATAM</li>
+                                <li>Automatizar procesos internos</li>
+                                <li>Alcanzar facturación mensual superior a $10,000 USD</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>1.2 Organización del Equipo</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Posición</th>
+                            <th>Responsabilidades</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CEO / Fundador</td>
+                            <td>Dirección general, estrategia</td>
+                        </tr>
+                        <tr>
+                            <td>Marketing Manager</td>
+                            <td>Campañas, embudos, análisis</td>
+                        </tr>
+                        <tr>
+                            <td>Fotógrafo / Videógrafo</td>
+                            <td>Sesiones, edición, entrega</td>
+                        </tr>
+                        <tr>
+                            <td>Social Media Manager</td>
+                            <td>Gestión de redes, contenido</td>
+                        </tr>
+                        <tr>
+                            <td>Diseñador Web / UX</td>
+                            <td>Páginas web, interfaz, funcionalidad</td>
+                        </tr>
+                        <tr>
+                            <td>Redactor / Content Writer</td>
+                            <td>Blogs, textos web, copys publicitarios</td>
+                        </tr>
+                        <tr>
+                            <td>Contador / Soporte Administrativo</td>
+                            <td>Facturación, pagos, contratos</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h3>1.3 Servicios</h3>
+                <div className="card">
+                    <h4><i className="fas fa-bullseye"></i> Portafolio de Servicios</h4>
+                    <div className="tags-container">
+                        <span className="tag">Marketing Digital</span>
+                        <span className="tag">Fotografía Profesional</span>
+                        <span className="tag">Producción de Video</span>
+                        <span className="tag">Manejo de Redes Sociales</span>
+                        <span className="tag">Creación de Páginas Web</span>
+                        <span className="tag">Copywriting</span>
+                        <span className="tag">Factura Electrónica</span>
+                    </div>
+                </div>
+            </div>
+        );
+        
+        const FeasibilityStudy = () => (
+            <div>
+                <h3>2.1 Análisis de Mercado</h3>
+                <p>El mercado digital en Latinoamérica ha experimentado un crecimiento significativo en los últimos años, con un aumento del 35% en la demanda de servicios digitales post-pandemia. Costa Rica, junto con otros países de la región, presenta oportunidades para servicios integrales de marketing digital.</p>
+                
+                <h3>2.2 Cliente Ideal (Buyer Persona)</h3>
+                <div className="card">
+                    <h4><i className="fas fa-user-tie"></i> Perfil del Cliente Ideal</h4>
+                    <p><strong>Demografía:</strong> Profesionales (médicos, ingenieros), emprendedores, pequeñas y medianas empresas</p>
+                    <p><strong>Necesidades:</strong> Exposición digital, branding profesional, automatización de procesos</p>
+                    <p><strong>Presupuesto:</strong> $500-$2,000 mensuales dependiendo de los servicios</p>
+                </div>
+                
+                <h3>2.3 Análisis FODA</h3>
+                <div className="card">
+                    <h4><i className="fas fa-thumbs-up"></i> Fortalezas</h4>
+                    <ul>
+                        <li>Equipo multidisciplinario</li>
+                        <li>Enfoque en atención personalizada</li>
+                        <li>Producción visual de alto nivel</li>
+                    </ul>
+                </div>
+                
+                <div className="card">
+                    <h4><i className="fas fa-bullseye"></i> Oportunidades</h4>
+                    <ul>
+                        <li>Creciente uso de redes para negocios</li>
+                        <li>Pocos proveedores con enfoque integral</li>
+                    </ul>
+                </div>
+            </div>
+        );
+        
+        const OperationalManuals = () => (
+            <div>
+                <h3>3.1 Manual de Marca</h3>
+                <div className="card">
+                    <h4><i className="fas fa-palette"></i> Guía de Identidad Visual</h4>
+                    <p><strong>Logotipo:</strong> Versiones principales y alternativas</p>
+                    <p><strong>Paleta de colores:</strong> Azul corporativo (#2563eb), morado creativo (#8b5cf6), gris profesional (#1e293b)</p>
+                    <p><strong>Tipografía:</strong> Montserrat para títulos, Open Sans para texto</p>
+                </div>
+                
+                <h3>3.2 Flujos de Trabajo</h3>
+                <p>Ingreso de cliente → Brief inicial → Cotización → Contrato → Producción → Entrega → Seguimiento post-venta.</p>
+                
+                <div className="progress-bar">
+                    <div className="progress" style={{ width: '35%' }}></div>
+                </div>
+                <p>Progreso promedio de proyectos: 35% completado</p>
+            </div>
+        );
+        
+        const TemplatesSection = () => (
+            <div>
+                <h3>4.1 Plantillas de Contratos</h3>
+                <div className="card">
+                    <h4><i className="fas fa-file-signature"></i> Modelos de Contrato</h4>
+                    <ul>
+                        <li>Contrato para servicios recurrentes</li>
+                        <li>Contrato para proyectos únicos</li>
+                        <li>Acuerdo de confidencialidad</li>
+                    </ul>
+                    <button className="btn"><i className="fas fa-download"></i> Descargar Plantillas</button>
+                </div>
+                
+                <h3>4.2 Plantillas de Reportes</h3>
+                <p>Modelos estandarizados para reportes mensuales a clientes, incluyendo métricas de rendimiento y KPIs.</p>
+            </div>
+        );
+        
+        const MarketingStrategy = () => (
+            <div>
+                <h3>5.1 Estrategia Digital</h3>
+                <div className="card">
+                    <h4><i className="fas fa-rocket"></i> Plan de Lanzamiento</h4>
+                    <ul>
+                        <li>Fase 1: Posicionamiento en redes sociales (Instagram, LinkedIn)</li>
+                        <li>Fase 2: Campañas de Google Ads para captación de leads</li>
+                        <li>Fase 3: Programa de referidos para clientes existentes</li>
+                    </ul>
+                </div>
+                
+                <h3>5.2 Presupuesto de Marketing</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Canal</th>
+                            <th>Presupuesto Mensual</th>
+                            <th>ROI Esperado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Google Ads</td>
+                            <td>$500</td>
+                            <td>1:4</td>
+                        </tr>
+                        <tr>
+                            <td>Meta Ads</td>
+                            <td>$300</td>
+                            <td>1:3</td>
+                        </tr>
+                        <tr>
+                            <td>Email Marketing</td>
+                            <td>$200</td>
+                            <td>1:5</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        );
+        
+        const AnnexesSection = () => (
+            <div>
+                <h3>6.1 Glosario Técnico</h3>
+                <div className="card">
+                    <h4><i className="fas fa-book-open"></i> Términos Digitales</h4>
+                    <p><strong>CTA:</strong> Call to Action (Llamado a la acción)</p>
+                    <p><strong>KPI:</strong> Key Performance Indicator (Indicador clave de rendimiento)</p>
+                    <p><strong>SEO:</strong> Search Engine Optimization (Optimización para motores de búsqueda)</p>
+                </div>
+                
+                <h3>6.2 Recursos Recomendados</h3>
+                <ul>
+                    <li>Libro: "Marketing Digital: La Guía Definitiva"</li>
+                    <li>Curso: "Google Analytics Avanzado"</li>
+                    <li>Podcast: "Emprendedores Digitales LATAM"</li>
+                </ul>
+            </div>
+        );
+        
+        // Renderizar la aplicación
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
